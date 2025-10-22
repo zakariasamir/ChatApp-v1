@@ -92,7 +92,7 @@ MiniProjectRealTimeChatApp/
 
 - Node.js (v18 or higher)
 - MongoDB (local or Atlas)
-- Yarn or npm
+- Yarn
 - Cloudinary account (for image uploads)
 
 ### Backend Setup
@@ -106,7 +106,7 @@ MiniProjectRealTimeChatApp/
 2. **Install dependencies:**
 
    ```bash
-   npm install
+   yarn install
    ```
 
 3. **Create `.env` file:**
@@ -123,7 +123,7 @@ MiniProjectRealTimeChatApp/
 
 4. **Start the server:**
    ```bash
-   npm run dev
+   yarn dev
    ```
 
 The backend will run on `http://localhost:5004`
