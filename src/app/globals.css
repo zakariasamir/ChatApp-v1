@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* WhatsApp Colors */
+  --whatsapp-green: #25d366;
+  --whatsapp-green-light: #dcf8c6;
+  --whatsapp-green-dark: #128c7e;
+  --whatsapp-bg-sidebar: #f0f2f5;
+  --whatsapp-bg-chat: #e5ddd5;
+  --whatsapp-bg-message-sent: #dcf8c6;
+  --whatsapp-bg-message-received: #ffffff;
+  --whatsapp-text-primary: #111b21;
+  --whatsapp-text-secondary: #667781;
+  --whatsapp-border: #e9edef;
 }
 
 @theme inline {
@@ -10,12 +22,26 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --color-whatsapp-green: var(--whatsapp-green);
+  --color-whatsapp-green-light: var(--whatsapp-green-light);
+  --color-whatsapp-bg-sidebar: var(--whatsapp-bg-sidebar);
+  --color-whatsapp-bg-chat: var(--whatsapp-bg-chat);
+  --color-whatsapp-bg-message-sent: var(--whatsapp-bg-message-sent);
+  --color-whatsapp-bg-message-received: var(--whatsapp-bg-message-received);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0e1621;
+    --foreground: #e9edef;
+    --whatsapp-bg-sidebar: #202c33;
+    --whatsapp-bg-chat: #0b141a;
+    --whatsapp-bg-message-sent: #005c4b;
+    --whatsapp-bg-message-received: #202c33;
+    --whatsapp-text-primary: #e9edef;
+    --whatsapp-text-secondary: #8696a0;
+    --whatsapp-border: #313d45;
   }
 }
 
@@ -40,21 +66,30 @@ body {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - WhatsApp style */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* WhatsApp message bubble tail - optional enhancement */
+.message-bubble-sent {
+  position: relative;
+}
+
+.message-bubble-received {
+  position: relative;
 }

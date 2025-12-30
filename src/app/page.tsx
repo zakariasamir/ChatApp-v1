@@ -1,10 +1,5 @@
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { ChatLayout } from "@/components/layout/ChatLayout";
+import { ChatPage } from "@/modules/chat/templates";
 
 export default function Home() {
-  return (
-    <ProtectedRoute>
-      <ChatLayout />
-    </ProtectedRoute>
-  );
+  return <ChatPage />;
 }
