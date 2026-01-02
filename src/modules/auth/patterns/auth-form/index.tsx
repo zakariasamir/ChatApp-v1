@@ -1,0 +1,22 @@
+"use client";
+
+import React, { useState } from "react";
+import { LoginForm, RegisterForm } from "@/modules/auth/components";
+
+const AuthForm: React.FC = () => {
+  const [isLogin, setIsLogin] = useState(true);
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {isLogin ? (
+          <LoginForm onSwitchToRegister={() => setIsLogin(false)} />
+        ) : (
+          <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AuthForm;
