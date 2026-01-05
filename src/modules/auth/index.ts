@@ -1,10 +1,10 @@
 // Components
-export { LoginForm } from "./components/LoginForm";
-export { RegisterForm } from "./components/RegisterForm";
-export { ProtectedRoute } from "./components/ProtectedRoute";
+export { default as LoginForm } from "./components/login-form";
+export { default as RegisterForm } from "./components/register-form";
+export { default as ProtectedRoute } from "./components/protected-route";
 
 // Patterns
-export { AuthForm } from "./patterns/AuthForm";
+export { default as AuthForm } from "./patterns/auth-form";
 
 // Templates
-export { AuthPage } from "./templates/AuthPage";
+export { default as AuthPage } from "./templates/auth-page";
