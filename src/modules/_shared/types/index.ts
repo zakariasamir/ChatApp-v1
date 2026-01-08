@@ -148,6 +148,14 @@ export interface UserItemProps {
   onClick?: () => void;
 }
 
+export interface RoomUser {
+  id: string;
+  room_id: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // Utility Types
 export type ChatMode = "rooms" | "private";
 
