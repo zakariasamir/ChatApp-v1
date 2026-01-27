@@ -1,97 +1,3 @@
-// "use client";
-
-// import React from "react";
-// import { MoreVertical, Video, Phone, ArrowLeft } from "lucide-react";
-// import { useChatState } from "@/modules/_shared/hooks/useChatState";
-// import {
-//   MessageList,
-//   MessageInput,
-//   TypingIndicator,
-// } from "@/modules/chat/components";
-// import { Avatar } from "@/components/ui/avatar";
-// import { cn } from "@/modules/_shared/lib/utils";
-
-// const ChatArea: React.FC = () => {
-//   const { currentRoom, currentPrivateChat } = useChatState();
-
-//   if (!currentRoom && !currentPrivateChat) {
-//     return (
-//       <div className="flex-1 flex items-center justify-center bg-[#E5DDD5]">
-//         <div className="text-center max-w-md px-6">
-//           <div className="w-24 h-24 bg-[#25D366] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-//             <span className="text-white text-4xl">💬</span>
-//           </div>
-//           <p className="text-[#667781] text-sm">
-//             Select a chat from the sidebar to start messaging
-//           </p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   const chatName = currentRoom?.name || currentPrivateChat?.username || "";
-//   const chatAvatar = currentPrivateChat?.profile_picture;
-//   const isOnline = currentPrivateChat ? true : false;
-
-//   return (
-//     <div className="flex-1 flex flex-col bg-[#E5DDD5]">
-//       {/* Chat Header */}
-//       <div className="bg-[#008069] px-4 py-3 flex items-center justify-between shadow-sm">
-//         <div className="flex items-center gap-3">
-//           <Avatar
-//             src={chatAvatar}
-//             alt={chatName}
-//             fallback={chatName.charAt(0).toUpperCase()}
-//             size="md"
-//             showOnline={!!currentPrivateChat}
-//             isOnline={isOnline}
-//           />
-//           <div className="flex-1 min-w-0">
-//             <h1 className="text-white font-medium text-base truncate">
-//               {chatName}
-//             </h1>
-//             {currentPrivateChat && (
-//               <p className="text-white/80 text-xs">
-//                 {isOnline ? "online" : "offline"}
-//               </p>
-//             )}
-//             {currentRoom?.description && (
-//               <p className="text-white/80 text-xs truncate">
-//                 {currentRoom.description}
-//               </p>
-//             )}
-//           </div>
-//         </div>
-//         <div className="flex items-center gap-1">
-//           <button className="p-2 text-white hover:bg-white/10 rounded-full transition-colors">
-//             <Video className="h-5 w-5" />
-//           </button>
-//           <button className="p-2 text-white hover:bg-white/10 rounded-full transition-colors">
-//             <Phone className="h-5 w-5" />
-//           </button>
-//           <button className="p-2 text-white hover:bg-white/10 rounded-full transition-colors">
-//             <MoreVertical className="h-5 w-5" />
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Messages */}
-//       <div className="flex-1 flex flex-col min-h-0 relative">
-//         <div className="absolute inset-0 bg-[#E5DDD5] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q0ZDRkNCIgc3Ryb2tlLXdpZHRoPSIxIiBvcGFjaXR5PSIwLjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
-//         <MessageList />
-//         <TypingIndicator />
-//       </div>
-
-//       {/* Message Input */}
-//       <MessageInput />
-//     </div>
-//   );
-// };
-
-// export default ChatArea;
-
-//----------------------------------------------
-
 "use client";
 
 import React, { useState } from "react";
@@ -99,12 +5,9 @@ import {
   MoreVertical,
   Video,
   Phone,
-  Search,
   Pin,
-  Star,
   Archive,
   Bell,
-  BellOff,
   UserPlus,
   Info,
   X,
@@ -116,14 +19,18 @@ import {
   TypingIndicator,
 } from "@/modules/chat/components";
 import { Avatar } from "@/components/ui/avatar";
-import { cn } from "@/modules/_shared/lib/utils";
+import API from "@/router";
 
 const ChatArea: React.FC = () => {
-  const { currentRoom, currentPrivateChat } = useChatState();
+  const { currentRoom } = useChatState();
   const [showMenu, setShowMenu] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
-  if (!currentRoom && !currentPrivateChat) {
+  const { room } = API.v1.rooms.useFindOneById({
+    roomId: currentRoom?.id || "",
+  });
+
+  if (!currentRoom) {
     return (
       <div className="flex-1 flex items-center justify-center bg-linear-to-br from-slate-50 via-blue-50/30 to-purple-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
         <div className="text-center max-w-lg px-8">
@@ -188,15 +95,15 @@ const ChatArea: React.FC = () => {
     );
   }
 
-  const chatName = currentRoom?.name || currentPrivateChat?.username || "";
-  const chatAvatar = currentPrivateChat?.profile_picture;
-  const isOnline = currentPrivateChat ? true : false;
-  const memberCount = currentRoom?.users?.length;
+  const chatName = room?.name || "";
+  const chatAvatar = room?.profile_picture;
+  const isOnline = room?.is_online;
+  const memberCount = room?.roomUsers?.length;
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-50 dark:bg-slate-950">
+    <div className="flex-1 flex flex-col bg-slate-50 dark:bg-slate-950 h-full">
       {/* Chat Header */}
-      <div className="bg-linear-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-4 py-3 shadow-lg relative z-10">
+      <div className="bg-linear-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-4 py-3 shadow-lg relative z-10 shrink-0">
         <div className="flex items-center justify-between">
           {/* Left section - Chat info */}
           <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -212,7 +119,7 @@ const ChatArea: React.FC = () => {
                   size="md"
                   className="ring-2 ring-white/30"
                 />
-                {currentPrivateChat && isOnline && (
+                {room && isOnline && (
                   <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-blue-600"></div>
                 )}
               </div>
@@ -225,7 +132,7 @@ const ChatArea: React.FC = () => {
                     </span>
                   )}
                 </h1>
-                {currentPrivateChat && (
+                {room && (
                   <p className="text-blue-100 text-xs flex items-center gap-1">
                     <span
                       className={`w-1.5 h-1.5 rounded-full ${
@@ -246,12 +153,6 @@ const ChatArea: React.FC = () => {
 
           {/* Right section - Actions */}
           <div className="flex items-center gap-1">
-            <button
-              className="p-2.5 text-white hover:bg-white/20 rounded-full transition-all duration-200 hover:scale-105"
-              title="Search in conversation"
-            >
-              <Search className="h-5 w-5" />
-            </button>
             <button
               className="p-2.5 text-white hover:bg-white/20 rounded-full transition-all duration-200 hover:scale-105"
               title="Voice call"
@@ -320,10 +221,10 @@ const ChatArea: React.FC = () => {
         </div>
       </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 flex flex-col min-h-0 relative">
+      {/* Messages Area - FIXED */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {/* Background pattern */}
-        <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50/20 to-purple-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950">
+        <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50/20 to-purple-50/20 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 pointer-events-none">
           <div
             className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]"
             style={{
@@ -332,12 +233,14 @@ const ChatArea: React.FC = () => {
           ></div>
         </div>
 
-        <MessageList />
+        <div className="flex-1 overflow-y-auto relative z-10">
+          <MessageList />
+        </div>
         <TypingIndicator />
       </div>
 
       {/* Message Input */}
-      <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
         <MessageInput />
       </div>
 
@@ -374,7 +277,7 @@ const ChatArea: React.FC = () => {
                   <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                     {chatName}
                   </h3>
-                  {currentPrivateChat && (
+                  {room && (
                     <p className="text-sm text-slate-600 dark:text-slate-400">
                       {isOnline ? "Online" : "Offline"}
                     </p>
