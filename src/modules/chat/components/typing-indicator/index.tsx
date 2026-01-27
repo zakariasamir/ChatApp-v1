@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useChatState } from "@/modules/_shared/hooks/useChatState";
-import { cn } from "@/modules/_shared/lib/utils";
 
 const TypingIndicator: React.FC = () => {
   const { currentRoom, currentPrivateChat } = useChatState();
