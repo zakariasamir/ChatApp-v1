@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   MoreVertical,
   MessageSquarePlus,
@@ -8,15 +8,13 @@ import {
   Search,
   LogOut,
   Settings,
-  Moon,
-  Sun,
   Bell,
 } from "lucide-react";
 import { useAuth } from "@/modules/_shared/contexts/AuthContext";
 import { useChatState } from "@/modules/_shared/hooks/useChatState";
 import API from "@/router/index";
 import { socketService } from "@/modules/_shared/lib/socket";
-import { Room, User, Message } from "@/modules/_shared/types";
+import { Room, User } from "@/modules/_shared/types";
 import { Avatar } from "@/components/ui/avatar";
 import SearchBar from "../search-bar";
 import { ChatListItem } from "@/modules/chat/components";
@@ -36,6 +34,23 @@ const Sidebar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | "rooms" | "direct">("all");
 
+  const handleRoomSelect = useCallback(
+    (room: Room) => {
+      selectRoom(room);
+      selectPrivateChat(null); // Clear the current private chat when selecting a room
+      socketService.joinRoom(room.id);
+    },
+    [selectRoom, selectPrivateChat]
+  );
+
+  const handlePrivateChatSelect = useCallback(
+    (u: User) => {
+      selectPrivateChat(u);
+      selectRoom(null); // Clear the current room when selecting a private chat
+    },
+    [selectPrivateChat, selectRoom]
+  );
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -44,10 +59,9 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  const handleRoomSelect = (room: Room) => {
-    selectRoom(room);
-    socketService.joinRoom(room.id);
-  };
+  console.log("onlineUsers", onlineUsers);
+  console.log("currentPrivateChat", currentPrivateChat);
+  console.log("currentRoom", currentRoom);
 
   // Combine rooms and users into a single chat list
   const chatList = useMemo(() => {
@@ -60,7 +74,7 @@ const Sidebar: React.FC = () => {
         timestamp: room.updated_at || room.created_at,
         unreadCount: 0,
         isOnline: false,
-        isActive: currentRoom?.id === room.id,
+        isActive: currentRoom?.id === room.id && !currentPrivateChat,
         onClick: () => handleRoomSelect(room),
         type: "room" as const,
       })) || [];
@@ -74,9 +88,9 @@ const Sidebar: React.FC = () => {
         lastMessage: "",
         timestamp: new Date(),
         unreadCount: 0,
-        isOnline: true,
-        isActive: currentPrivateChat?.id === u.id,
-        onClick: () => selectPrivateChat(u),
+        isOnline: u.is_online,
+        isActive: currentPrivateChat?.id === u.id && !currentRoom,
+        onClick: () => handlePrivateChatSelect(u),
         type: "user" as const,
       }));
 
@@ -103,10 +117,10 @@ const Sidebar: React.FC = () => {
     user,
     currentRoom,
     currentPrivateChat,
+    handleRoomSelect,
+    handlePrivateChatSelect,
     searchQuery,
     activeTab,
-    handleRoomSelect,
-    selectPrivateChat,
   ]);
 
   return (
@@ -248,7 +262,7 @@ const Sidebar: React.FC = () => {
           <div className="py-1">
             {chatList.map((chat, index) => (
               <div
-                key={chat.id}
+                key={`${chat.type}-${chat.id}`}
                 className="animate-in fade-in slide-in-from-left-2"
                 style={{ animationDelay: `${index * 30}ms` }}
               >
