@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { Sidebar, ChatArea } from "@/modules/chat/components";
-import { ArrowLeft, Menu, Maximize2, Minimize2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useChatState } from "@/modules/_shared/hooks/useChatState";
 import { cn } from "@/modules/_shared/lib/utils";
 
 const ChatLayout: React.FC = () => {
   const { currentRoom, currentPrivateChat } = useChatState();
   const [showSidebar, setShowSidebar] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const hasActiveChat = !!currentRoom || !!currentPrivateChat;
 
@@ -38,17 +37,6 @@ const ChatLayout: React.FC = () => {
       setShowSidebar(true);
     } else {
       setShowSidebar(!showSidebar);
-    }
-  };
-
-  // Toggle fullscreen mode
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
     }
   };
 
@@ -107,33 +95,6 @@ const ChatLayout: React.FC = () => {
               </button>
             </div>
           )}
-
-          {/* Desktop sidebar toggle */}
-          {!isMobile && (
-            <button
-              onClick={() => setShowSidebar(!showSidebar)}
-              className="absolute top-4 left-4 z-40 p-2.5 bg-white dark:bg-slate-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 border border-slate-200 dark:border-slate-700 hidden sm:block"
-              aria-label="Toggle sidebar"
-            >
-              <Menu className="h-5 w-5 text-slate-700 dark:text-slate-200" />
-            </button>
-          )}
-
-          {/* Fullscreen toggle (desktop only) */}
-          {!isMobile && (
-            <button
-              onClick={toggleFullscreen}
-              className="absolute top-4 right-4 z-40 p-2.5 bg-white dark:bg-slate-800 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 border border-slate-200 dark:border-slate-700 hidden sm:block"
-              aria-label="Toggle fullscreen"
-            >
-              {isFullscreen ? (
-                <Minimize2 className="h-5 w-5 text-slate-700 dark:text-slate-200" />
-              ) : (
-                <Maximize2 className="h-5 w-5 text-slate-700 dark:text-slate-200" />
-              )}
-            </button>
-          )}
-
           <ChatArea />
         </div>
       </div>
